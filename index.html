@@ -1,11 +1,17 @@
 <html>
   <head>
     <title>Time Curves</title>
-    <script type="module" src="./scr/script.js"></script>
+    <script type="module" src="./scr/front-js/script.js"></script>
     <link rel="stylesheet" href="./style/style.css">
     <link href="./favicon.ico" rel="icon" type="image/x-icon">
   </head>
   <body>
     <h1>Welcome to Time Curves!</h1>
+    <div>It is now <div id="year">2021</div></div>
+    <input type="range" id="time" name="time" min="988" max="2021">
+    <div id="canvas-holder">
+      <img id="map" src="./resources/img/TestUkraineMap.jpg" >
+      <canvas id="canvas"></canvas>
+    </div>
   </body>
 </html>

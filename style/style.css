@@ -1,0 +1,29 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+input#time {
+  width: 90%;
+  height: 40px;
+  vertical-align: middle;
+  margin: 0 30px;
+}
+
+img#map {
+  display: none;
+}
+
+div#canvas-holder {
+  overflow: scroll;
+  cursor: grab;
+}
+
+canvas#canvas {
+  display: block;
+  margin: 0;
+  overflow: scroll;
+}
