@@ -1,0 +1,25 @@
+{
+  "name": "time_curves",
+  "version": "0.0.1",
+  "description": "This is a project of an interactive historical map in which you can control time.",
+  "main": "server.js",
+  "scripts": {
+    "test": "mocha --exit",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Time-Curves/Time_Curves.git"
+  },
+  "keywords": [
+    "map",
+    "time",
+    "history"
+  ],
+  "author": "Time-Curves",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Time-Curves/Time_Curves/issues"
+  },
+  "homepage": "https://github.com/Time-Curves/Time_Curves#readme"
+}
