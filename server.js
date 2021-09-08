@@ -1,65 +1,89 @@
-'use strict';
+const https = require('https');
+const path = require('path');
+let fs = require('fs');
+const { renderToString } = require('@vue/server-renderer');
+const ServeStatic = require('./src/utils/serveStatic.js');
+const DevServer = require('./setup-dev-server.js');
+const insertInitialState = require('./src/utils/insertInitialState.js').insertInitialState;
 
-const http = require('http');
-const FileManager = require('./scr/node-js/fileManager').FileManager;
-const fileManager = new FileManager();
+const webpackManifest = require('./dist/server/ssr-manifest.json');
+const appPath = path.join(__dirname, 'dist', 'server', webpackManifest['app.js']);
+const template = fs.readFileSync(path.join(__dirname, '/dist/client/index.html'), 'utf-8')
+  .toString();
 
-//types of request extensions
-const mime = {
-  'html': 'text/html',
-  'js': 'application/javascript',
-  'css': 'text/css',
-  'png': 'image/png',
-  'ico': 'image/x-icon',
-  '/date': 'text/plain',
+const createApp = require(appPath).default;
+
+const serverOptions = {
+  key: fs.readFileSync(path.join(__dirname, 'key.pem')),
+  cert: fs.readFileSync(path.join(__dirname, 'cert.pem')),
 };
 
-//function for handling requests
-async function handleRequest(req, res) {
-  const url = req.url;
-  let name = url;
-  const method = req.method;
-  let extention = url.split('.')[1];
-  if (method === 'GET') {
-    if (url === '/') {
-      extention = 'html';
-      name = '/index.html';
-    }
-    const typeAns = mime[extention];
-    let data = await fileManager.readFile('.' + name);
-    if (!data) {
-      //handle if no page
-      const pageNotFound = await fileManager.readFile('./scr/html/pageNotFound.html');
-      console.log('no such file => ' + name);
-      res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
-      res.write(pageNotFound);
-    } else if (typeof data === 'number') {
-      console.log('error occured => ' + name);
-      res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
-    } else {
-      res.writeHead(200, { 'Content-Type': `${typeAns}; charset=utf-8` });
-      res.write(data);
-    }
-    res.end();
-  } else if (method === 'POST') {
-    console.log('POST');
+
+const STATIC = ['/img', '/js', '/css', '/favicon.ico'];
+const staticConfig = ServeStatic.genConfigForAll(STATIC, './dist/client', __dirname);
+const handleStatic = ServeStatic.create(staticConfig, __dirname);
+
+const devServerOptions = {
+  templatePath: path.join(__dirname, '/dist/client/index.html'),
+  pathToClientBundle: path.join(__dirname, '/dist/client'),
+  compileToFs: !!process.env.FS,
+  ignore: /\.hot-update\.js$/,
+};
+
+let devServerMiddleware = null;
+if (process.env.HMR) {
+  try {
+    DevServer.setHooks(devServerOptions);
+    devServerMiddleware = DevServer.getMiddleware();
+  } catch (err) {
+    console.log(err);
+    process.exit(1);
   }
 }
-  
-//creating server
-const server = http.createServer();
 
-server.listen(process.env.PORT || 8000, () => {
-  console.log('Server running on port 8000...');
-});
+const serve = async (req, res) => {
+  console.log('SSR req.url:', req.url);
 
-server.on('request', handleRequest);
+  if (process.env.HMR) fs = res.locals.fs;
 
-//handling rejections in promises
-process.on('unhandledRejection', error => {
-  console.log('rejection: ', error);
-});
+  if (handleStatic(req, res, fs)) return;
 
-process.on('rejectionHandled', promise => {
-  console.log('rejection handled: ' + promise);
-});
+  const appParts = Object.create(null); // app parts: { app, router, store }
+  let appContent = new String();
+
+  try {
+    Object.assign(appParts, await createApp(req));
+  } catch (err) {
+    console.log(err);
+    res.setHeader('Content-Type', 'text/html');
+    res.end('server error 500');
+    return;
+  }
+
+  const { app, store } = appParts;
+
+  let templateWithState;
+  try {
+    appContent = await renderToString(app);
+    templateWithState = insertInitialState(store.state, template);
+  } catch (err) {
+    console.log(err);
+    return;
+  }
+
+  const html = templateWithState.replace('<div id="app">', `<div id="app">${appContent}`);
+
+  res.setHeader('Content-Type', 'text/html');
+  res.end(html);
+};
+
+https.createServer(serverOptions, async (req, res) => {
+  console.log('New REQ:', req.url);
+  if (process.env.HMR) {
+    devServerMiddleware(req, res, serve);
+  } else {
+    serve(req, res);
+  }
+}).listen(8080);
+
+console.log('You can navigate to https://localhost:8080');

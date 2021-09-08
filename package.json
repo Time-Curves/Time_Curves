@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "name": "time_curves",
   "version": "0.0.1",
   "description": "This is a project of an interactive historical map in which you can control time.",
@@ -22,4 +23,62 @@
     "url": "https://github.com/Time-Curves/Time_Curves/issues"
   },
   "homepage": "https://github.com/Time-Curves/Time_Curves#readme"
+=======
+  "name": "vue_ssr_app_template",
+  "version": "0.3.0",
+  "description": "Template for creating SSR apps using Vue.js.v3",
+  "scripts": {
+    "build:client": "vue-cli-service build --dest dist/client --mode=development",
+    "build:server": "cross-env SSR=1 vue-cli-service build --dest dist/server --mode=development",
+    "build": "npm run build:client && npm run build:server",
+    "start": "node server.js",
+    "dev": "cross-env HMR=1 node server.js",
+    "dev:fs": "cross-env FS=1 npm run dev",
+    "prod": "vue-cli-service build --dest dist/server && cross-env SSR=1 vue-cli-service build --dest dist/client && npm run start",
+    "lint": "cross-env ./node_modules/.bin/eslint --color --fix ./ && vue-cli-service lint --fix",
+    "clear_uni:dist": "rm -rf ./dist",
+    "clear_win:dist": "rmdir /s /q dist"
+  },
+  "dependencies": {
+    "@vue/server-renderer": "^3.1.4",
+    "core-js": "^3.6.5",
+    "vue-router": "^4.0.10",
+    "vuex": "^4.0.2"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "@vue/compiler-sfc": "^3.0.0",
+    "babel-eslint": "^10.1.0",
+    "cross-env": "^7.0.2",
+    "eslint": "^6.8.0",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-vue": "^7.13.0",
+    "memory-fs": "^0.4.1",
+    "webpack": "^4.46.0",
+    "webpack-dev-middleware": "^3.7.3",
+    "webpack-hot-middleware": "^2.25.0",
+    "webpack-manifest-plugin": "^3.1.1",
+    "webpack-node-externals": "^3.0.0"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/vue3-essential"
+    ],
+    "parserOptions": {
+      "parser": "babel-eslint"
+    },
+    "rules": {}
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+>>>>>>> unicorn
 }
