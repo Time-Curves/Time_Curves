@@ -1,20 +1,15 @@
 const mysql = require('mysql');
 const connData = require('../../secret.js').dbConnData;
 
-
-const conn = mysql.createConnection(connData);
-
-conn.connect((err) => {
-  if (err) throw err;
-  console.log('Connected!');
+const getConnection = () => new Promise((resolve, reject) => {
+  const conn = mysql.createConnection(connData);
+  conn.connect((err) => {
+    if (err) return resolve({err, conn});
+    console.log('Created new conn to db:', conn.threadId, '// threadId');
+    resolve({err, conn});
+  });
 });
 
-const getConnection = () => {
-
+module.exports = {
+  getConnection,
 };
-
-(async () => {
-  const res = await require('./procedures.js').getUserByName(conn, 'LTR');
-  console.log(res);
-})()
-

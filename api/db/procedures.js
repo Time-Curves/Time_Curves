@@ -1,12 +1,11 @@
 
-const getUserByName = async (conn, name) => {
+const getUserByName = (conn, name) => {
   const q = `CALL GetUserByName(?)`;
-  return await new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     conn.query(q, [name], (err, res) => {
       if (err) {
         reject(err)
       }
-      console.log(res);
       resolve(res);
     });
   });
