@@ -1,7 +1,8 @@
 const Procedures = require('./procedures.js');
 const Connection = require('./dbConnection.js');
 
-class DBM {
+//data base controller
+class DBC {
   constructor(options) {
     this.options = options;
   }
@@ -15,9 +16,12 @@ class DBM {
     });
   });
 
-  getUserByName = (name) => new Promise((resolve, reject) => {
+  getUserByNickName = (name) => new Promise(async (resolve, reject) => {
     try {
-      resolve(Procedures.getUserByName(this._conn, name));
+      const data = await Procedures.getUserByNickName(this._conn, name);
+      const rows = data[0];
+      const res = rows[0];
+      resolve(res);
     } catch (err) {
       reject(err);
     }
@@ -25,19 +29,17 @@ class DBM {
 
 }
 
-module.exports = {
-  DBM,
-};
+module.exports.default = DBC;
 
 //example
-const dbm = new DBM();
+const dbc = new DBC();
 (async () => {
   let res;
   
   try {
-    const error = await dbm.connect();
+    const error = await dbc.connect();
     if (error) return console.log('const error:', error);
-    res = await dbm.getUserByName('LTR');
+    res = await dbc.getUserByNickName('LTR');
   } catch (err) {
     console.log('catch error:', err)
   }

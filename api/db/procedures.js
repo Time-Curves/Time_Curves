@@ -1,6 +1,6 @@
 
-const getUserByName = (conn, name) => {
-  const q = `CALL GetUserByName(?)`;
+const getUserByNickName = (conn, name) => {
+  const q = `CALL GetUserByNickName(?)`;
   return new Promise((resolve, reject) => {
     conn.query(q, [name], (err, res) => {
       if (err) {
@@ -12,5 +12,5 @@ const getUserByName = (conn, name) => {
 };
 
 module.exports = {
-  getUserByName,
+  getUserByNickName,
 };

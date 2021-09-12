@@ -1,14 +1,14 @@
 
 const routes = {
-  '/map': { accessRequired: 0, executor: () => 'map', contentType: 'text/html' }
+  '/map': { accessRequired: 1, executor: () => 'map', contentType: 'text/html' }
 };
 
 
-const getRoute = (routeStr, access) => {
+const getRoute = (routeStr, userAccessLevel) => {
   const route = routes[routeStr];
-  if (!route) return null;
-  if (access < route.access) return new Error('Not enough access level!');
-  return route;
+  if (!route) return { route: null, err: new Error('Wrong call') };
+  if (route.accessRequired > userAccessLevel) return { route: null, err: new Error('Not enough access level!') };
+  return { route, err: null };
 };
 
 
