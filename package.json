@@ -1,29 +1,4 @@
 {
-<<<<<<< HEAD
-  "name": "time_curves",
-  "version": "0.0.1",
-  "description": "This is a project of an interactive historical map in which you can control time.",
-  "main": "server.js",
-  "scripts": {
-    "test": "mocha --exit",
-    "start": "node server.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Time-Curves/Time_Curves.git"
-  },
-  "keywords": [
-    "map",
-    "time",
-    "history"
-  ],
-  "author": "Time-Curves",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/Time-Curves/Time_Curves/issues"
-  },
-  "homepage": "https://github.com/Time-Curves/Time_Curves#readme"
-=======
   "name": "vue_ssr_app_template",
   "version": "0.3.0",
   "description": "Template for creating SSR apps using Vue.js.v3",
@@ -42,6 +17,7 @@
   "dependencies": {
     "@vue/server-renderer": "^3.1.4",
     "core-js": "^3.6.5",
+    "mysql": "^2.18.1",
     "vue-router": "^4.0.10",
     "vuex": "^4.0.2"
   },
@@ -80,5 +56,4 @@
     "last 2 versions",
     "not dead"
   ]
->>>>>>> unicorn
 }

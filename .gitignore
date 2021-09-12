@@ -2,6 +2,9 @@
 /node_modules
 /dist
 
+# privat data
+secret.js
+sql.js
 
 # local env files
 .env.local
