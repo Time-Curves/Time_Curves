@@ -1,7 +1,7 @@
 'use strict';
 
-import Border from "./modules/border_class.js";
-import { Point } from "./structs.js";
+import Border from './modules/border_class.js';
+import { Point } from './structs.js';
 
 //test script
 

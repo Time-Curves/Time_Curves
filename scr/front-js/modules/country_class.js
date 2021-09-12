@@ -1,6 +1,6 @@
 'use strict';
 
-import Region from "./region_class.js";
+import Region from './region_class.js';
 
 export default class Country extends Region {
   constructor(positionX, positionY) {
