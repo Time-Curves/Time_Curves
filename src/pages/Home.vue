@@ -4,7 +4,7 @@
     <p>hello world</p>
     <p>Counter: {{ $store.state.counter }}</p>
     <p><button @click="$store.commit('INCREMENT')">+</button></p>
-    <HelloWorld msg="This i s the Home Page"/>
+    <HelloWorld msg="This is the Home Page"/>
   </div>
 </template>
 
