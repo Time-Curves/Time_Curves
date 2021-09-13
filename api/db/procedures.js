@@ -60,10 +60,23 @@ const updateTable = (conn, tableName, whereIdField, someId, updateObj) => {
   });
 };
 
+const deleteRowsFromTable = (conn, tableName, whereIdField, someId) => {
+  someId = typeof someId === 'number' ? someId : `\'${someId}\'`;
+  const q = `DELETE FROM ${tableName} WHERE ${whereIdField} = ${someId};`;
+  return new Promise((resolve, reject) => {
+    conn.query(q, (err, res) => {
+      if (err) {
+        reject(err)
+      }
+      resolve(res);
+    });
+  });
+};
 
 module.exports = {
   getUserByNickName,
   insertUser,
   updateTable,
+  deleteRowsFromTable,
 
 };

@@ -38,6 +38,9 @@ class DBC {
 
   updateUserByNickName = (name, updateObj) => Procedures.updateTable(this._conn, 'Users', 'nickName', name, updateObj);
 
+  deleteFromUsersByNickName = (name) => Procedures.deleteRowsFromTable(this._conn, 'Users', 'nickName', name);
+
+
 }
 
 module.exports.default = DBC;
@@ -50,7 +53,7 @@ const dbc = new DBC();
   try {
     const error = await dbc.connect();
     if (error) return console.log('const error:', error);
-    res = await dbc.updateUserByNickName('LTR2', { 'age': 0 });
+    res = await dbc.deleteFromUsersByNickName('LTR');
   } catch (err) {
     console.log('catch error:', err)
   }
