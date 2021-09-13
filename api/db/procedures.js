@@ -26,7 +26,7 @@ const insertUser = (conn, nickName, firstName, secondName, email, accessLevel, a
   return new Promise((resolve, reject) => {
     conn.query(q, [nickName, firstName, secondName, email, accessLevel, age, sex], (err, res) => {
       if (err) {
-        reject(err)
+        reject(err);
       }
       resolve(res);
     });
