@@ -14,7 +14,7 @@ const getUserByNickName = (conn, name) => {
   return new Promise((resolve, reject) => {
     conn.query(q, [name], (err, res) => {
       if (err) {
-        reject(err)
+        reject(err);
       }
       resolve(res);
     });
