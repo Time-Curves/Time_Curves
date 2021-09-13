@@ -27,6 +27,15 @@ class DBC {
     }
   });
 
+  insertUser = (nickName, firstName, secondName, email, accessLevel, age, sex) => new Promise(async (resolve, reject) => {
+    try {
+      await Procedures.insertUser(this._conn, nickName, firstName, secondName, email, accessLevel, age, sex);
+      resolve('true');
+    } catch (err) {
+      reject(err);
+    }
+  });
+
 }
 
 module.exports.default = DBC;
@@ -39,7 +48,7 @@ const dbc = new DBC();
   try {
     const error = await dbc.connect();
     if (error) return console.log('const error:', error);
-    res = await dbc.getUserByNickName('LTR');
+    res = await dbc.insertUser('LTR2', 'some', 'guy', 'emailL2', 1, 5, 'w');
   } catch (err) {
     console.log('catch error:', err)
   }
