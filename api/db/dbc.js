@@ -36,6 +36,8 @@ class DBC {
     }
   });
 
+  updateUserByNickName = (name, updateObj) => Procedures.updateTable(this._conn, 'Users', 'nickName', name, updateObj);
+
 }
 
 module.exports.default = DBC;
@@ -48,7 +50,7 @@ const dbc = new DBC();
   try {
     const error = await dbc.connect();
     if (error) return console.log('const error:', error);
-    res = await dbc.insertUser('LTR2', 'some', 'guy', 'emailL2', 1, 5, 'w');
+    res = await dbc.updateUserByNickName('LTR2', { 'age': 0 });
   } catch (err) {
     console.log('catch error:', err)
   }
