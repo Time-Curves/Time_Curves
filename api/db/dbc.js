@@ -5,6 +5,10 @@ const Connection = require('./dbConnection.js');
 class DBC {
   constructor(options) {
     this.options = options;
+    this.schema = {
+      name: null,
+      tables: {},
+    };
   }
 
   connect = (cb) => new Promise((resolve, reject) => {
@@ -14,6 +18,32 @@ class DBC {
       if (cb) cb();
       resolve();
     });
+  });
+
+  getDbSchema = () => new Promise(async (resolve, reject) => {
+    try {
+      const data = await Procedures.getDbSchema(this._conn);
+      const tableNames = [];
+      for (const row of data) tableNames.push(row['table_name']);
+      const promises = [];
+      for (const tName of tableNames) {
+        promises.push(Procedures.descTable(this._conn, tName));
+      }
+      Promise.all(promises).then((data) => {
+        console.log(data);
+        if (data.length === 0) throw new Error('Empty Tables!');
+        for (let i = 0; i < tableNames.length; i++) {
+          const tableFields = data[i];
+          this.schema.tables[tableNames[i]] = {};
+          for (const fieldRow of tableFields) {
+            this.schema.tables[tableNames[i]][fieldRow.Field] = fieldRow.Type;
+          }
+        }
+        resolve(true);
+      });
+    } catch (err) {
+      reject(err);
+    }
   });
 
   getUserByNickName = (name) => new Promise(async (resolve, reject) => {
@@ -30,7 +60,7 @@ class DBC {
   insertUser = (nickName, firstName, secondName, email, accessLevel, age, sex) => new Promise(async (resolve, reject) => {
     try {
       await Procedures.insertUser(this._conn, nickName, firstName, secondName, email, accessLevel, age, sex);
-      resolve('true');
+      resolve(true);
     } catch (err) {
       reject(err);
     }
@@ -40,6 +70,10 @@ class DBC {
 
   deleteFromUsersByNickName = (name) => Procedures.deleteRowsFromTable(this._conn, 'Users', 'nickName', name);
 
+  insertUser = (...args) => {
+    if (args.length === 1) return Procedures.insertIntoTable(this._conn, 'Users', args);
+    return Procedures.insertIntoTable(this._conn, 'Users', insertObj);
+  }
 
 }
 
@@ -53,7 +87,8 @@ const dbc = new DBC();
   try {
     const error = await dbc.connect();
     if (error) return console.log('const error:', error);
-    res = await dbc.deleteFromUsersByNickName('LTR');
+    //res = await dbc.insertUser('LTR', 'myFirstName', 'mySecondName', 'myEmail', '1', 2, 'w');
+    res = await dbc.getDbSchema();
   } catch (err) {
     console.log('catch error:', err)
   }
