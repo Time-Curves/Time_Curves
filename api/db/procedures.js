@@ -1,13 +1,33 @@
+const replaceAt = require('../helpers.js');
 
 const _setProcQMarks = (n) => {
   if (n <= 0) throw new Error('Invalid function argument!');
   return (n === 1) ? `?` : `?` + ', ?'.repeat(args.length - 1);
 };
 
-const _call = (conn, procName, ...args) => {
-  const q = `CALL GetUserByNickName(${_setProcQMarks(args.length)})`;
+const _call = (procName, ...args) => {
+
 };
 
+const insertIntoTable = (conn, tableName, insertObj) => {
+  const values = Object.values(insertObj).join(', ');
+  const fields = Object.keys(insertObj).join(', ');
+  ///
+  console.log(values);
+  ///
+  const q = `
+    INSERT INTO ${tableName} ( ${fields} )
+    VALUES ( ${values} );
+  `;
+  return new Promise((resolve, reject) => {
+    conn.query(q, (err, res) => {
+      if (err) {
+        reject(err)
+      }
+      resolve(res);
+    });
+  });
+}
 
 const getUserByNickName = (conn, name) => {
   const q = `CALL GetUserByNickName(?)`;
@@ -16,6 +36,33 @@ const getUserByNickName = (conn, name) => {
       if (err) {
         reject(err);
       }
+      resolve(res);
+    });
+  });
+};
+
+const descTable = (conn, name) => {
+  return new Promise((resolve, reject) => {
+    const q = `DESC ${name}`;
+    conn.query(q, (err, res) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(res);
+    });
+  });
+};
+
+const getDbSchema = (conn) => {
+  const q = `SELECT table_name FROM information_schema.tables WHERE table_type = 'base table'`;
+  return new Promise((resolve, reject) => {
+    conn.query(q, (err, res) => {
+      if (err) {
+        reject(err);
+      }
+      ///
+      console.log(res);
+      ///
       resolve(res);
     });
   });
@@ -31,10 +78,6 @@ const insertUser = (conn, nickName, firstName, secondName, email, accessLevel, a
       resolve(res);
     });
   });
-};
-
-const replaceAt = (str, index, replacement) => {
-  return str.substr(0, index) + replacement + str.substr(index + replacement.length);
 };
 
 const updateTable = (conn, tableName, whereIdField, someId, updateObj) => {
@@ -78,5 +121,8 @@ module.exports = {
   insertUser,
   updateTable,
   deleteRowsFromTable,
-
+  insertIntoTable,
+  getDbSchema,
+  descTable,
+  
 };
