@@ -1,14 +1,16 @@
 const Procedures = require('./procedures.js');
 const Connection = require('./dbConnection.js');
+const DatabaseDataValidator = require('./dbDataValidator.js').default;
+
+const defaultOptions = {
+  dbdv: DatabaseDataValidator,
+
+};
 
 //data base controller
 class DBC {
-  constructor(options) {
-    this.options = options;
-    this.schema = {
-      name: null,
-      tables: {},
-    };
+  constructor(options = {}) {
+    this.options = { ...defaultOptions, ...options };
   }
 
   connect = (cb) => new Promise((resolve, reject) => {
@@ -20,9 +22,24 @@ class DBC {
     });
   });
 
-  getDbSchema = () => new Promise(async (resolve, reject) => {
+  init = (dbSchema) => new Promise(async (resolve, reject) => {
     try {
-      const data = await Procedures.getDbSchema(this._conn);
+      const schema = dbSchema ? dbSchema : await this.queryDbSchema();
+      this.schema = schema;
+      this.dbdv = new this.options.dbdv(this.schema);
+      resolve();
+    } catch (err) {
+      reject(err);
+    }
+  });
+
+  queryDbSchema = () => new Promise(async (resolve, reject) => {
+    try {
+      const schema = {
+        name: null,
+        tables: {},
+      };
+      const data = await Procedures.getBaseTableNames(this._conn);
       const tableNames = [];
       for (const row of data) tableNames.push(row['table_name']);
       const promises = [];
@@ -30,16 +47,15 @@ class DBC {
         promises.push(Procedures.descTable(this._conn, tName));
       }
       Promise.all(promises).then((data) => {
-        console.log(data);
         if (data.length === 0) throw new Error('Empty Tables!');
         for (let i = 0; i < tableNames.length; i++) {
           const tableFields = data[i];
-          this.schema.tables[tableNames[i]] = {};
+          schema.tables[tableNames[i]] = {};
           for (const fieldRow of tableFields) {
-            this.schema.tables[tableNames[i]][fieldRow.Field] = fieldRow.Type;
+            schema.tables[tableNames[i]][fieldRow.Field] = fieldRow.Type;
           }
         }
-        resolve(true);
+        resolve(schema);
       });
     } catch (err) {
       reject(err);
@@ -70,10 +86,10 @@ class DBC {
 
   deleteFromUsersByNickName = (name) => Procedures.deleteRowsFromTable(this._conn, 'Users', 'nickName', name);
 
-  insertUser = (...args) => {
-    if (args.length === 1) return Procedures.insertIntoTable(this._conn, 'Users', args);
-    return Procedures.insertIntoTable(this._conn, 'Users', insertObj);
-  }
+  // insertUser = (...args) => {
+  //   if (args.length === 1) return Procedures.insertIntoTable(this._conn, 'Users', args);
+  //   return Procedures.insertIntoTable(this._conn, 'Users', insertObj);
+  // }
 
 }
 
@@ -85,10 +101,14 @@ const dbc = new DBC();
   let res;
   
   try {
-    const error = await dbc.connect();
-    if (error) return console.log('const error:', error);
+    const errConnect = await dbc.connect();
+    if (errConnect) return console.log('const error connect:', errConnect);
+    const errInit = await dbc.init();
+    if (errInit) return console.log('const error init:', errInit);
+    const dbdv = new DatabaseDataValidator(await dbc.queryDbSchema());
+    console.log(dbdv.validate('Users', 'user_id', 2));
     //res = await dbc.insertUser('LTR', 'myFirstName', 'mySecondName', 'myEmail', '1', 2, 'w');
-    res = await dbc.getDbSchema();
+    //res = await dbc.getDbSchema();
   } catch (err) {
     console.log('catch error:', err)
   }

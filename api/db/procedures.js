@@ -53,16 +53,13 @@ const descTable = (conn, name) => {
   });
 };
 
-const getDbSchema = (conn) => {
+const getBaseTableNames = (conn) => {
   const q = `SELECT table_name FROM information_schema.tables WHERE table_type = 'base table'`;
   return new Promise((resolve, reject) => {
     conn.query(q, (err, res) => {
       if (err) {
         reject(err);
       }
-      ///
-      console.log(res);
-      ///
       resolve(res);
     });
   });
@@ -122,7 +119,7 @@ module.exports = {
   updateTable,
   deleteRowsFromTable,
   insertIntoTable,
-  getDbSchema,
+  getBaseTableNames,
   descTable,
   
 };
