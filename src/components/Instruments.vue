@@ -2,7 +2,7 @@
 <div class="instruments" @mousedown="onMouseDown">
   <Instrument v-for="instrument in allInstruments" :key="instrument.id" 
   :id="instrument.id" title="instrument.title" @click-child="onChildClick"
-  v-bind:style="{backgroundImage: 'url('+require('@/assets/'+instrument.icon)+')'}"/>
+  v-bind:style="{backgroundImage: 'url(' + require('@/assets/'+instrument.icon) + ')'}"/>
 </div>
 </template>
 
@@ -42,9 +42,11 @@ export default {
       this.$el.style.cursor = 'grabbing';
     },
     onChildClick(id) {
+      for (let child of this.$el.children) {
+        child.style['box-shadow'] = 'none';
+      }
+      this.$el.children[id].style['box-shadow'] = '1px 1px blue';
       this.cc.setActive(id);
-      //const cc = this.cc();
-      //instruments[id].func(cc, x, y);
     }
   }
 };
@@ -57,7 +59,7 @@ export default {
   position: absolute;
   left: 10px;
   top: 10px;
-  border: 1px solid gray;
+  border: 1px solid rgb(128, 128, 128);
   padding: 25px 1px 1px 1px;
   background: rgb(255, 228, 228);
   cursor: grab;
