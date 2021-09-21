@@ -1,21 +1,22 @@
 <template>
 <div class="instruments" @mousedown="onMouseDown">
-  <Instrument/>
-  <Instrument/>
-  <Instrument/>
+  <Instrument v-for="instrument in allInstruments" :key="instrument.id"/>
 </div>
 </template>
 
 <script>
 import Instrument from './Instrument.vue';
+import { mapGetters } from 'vuex';
+
 export default {
   name: 'Instruments',
   components: {
     Instrument
   },
   data() {
-    return { x1: 10, y1: 10, dx: 0, dy: 0 }
+    return { x1: 10, y1: 10, dx: 0, dy: 0 };
   },
+  computed: mapGetters(['allInstruments']),
   methods: {
     onMouseDown(e) {
       this.dx = e.clientX - this.x1;
@@ -42,7 +43,7 @@ export default {
 <style scoped>
 .instruments {
   height: auto;
-  width: 62px;
+  width: 60px;
   position: absolute;
   left: 10px;
   top: 10px;

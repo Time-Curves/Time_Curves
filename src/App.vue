@@ -1,35 +1,23 @@
 <template>
-<div>
-  <Map/>
-  <Instruments/>
-</div>
+  <div id="nav">
+    <router-view/>
+  </div>
 </template>
 
 <script>
-import Map from './components/Map.vue';
-import Instruments from './components/Instruments.vue';
-
+import someMixin from './mixins/someMixin.js';
 export default {
   name: 'App',
-  components: {
-    Map, Instruments,
-  },
+  mixins: [someMixin], //global mixins
 };
 </script>
 
 <style>
 #app {
-  position: relative;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-}
-html, body {
-  overflow: hidden;
-}
-* {
-  box-sizing: border-box;
 }
 </style>

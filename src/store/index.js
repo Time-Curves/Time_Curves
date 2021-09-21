@@ -1,12 +1,12 @@
 import Vuex from 'vuex';
+import instruments from './modules/instruments';
+import home from './modules/home';
+import map from './modules/map';
 
 export default Vuex.createStore({
-  state: {
-    counter: 0,
-  },
-  mutations: {
-    INCREMENT(state) {
-      state.counter++;
-    },
-  },
+  modules: {
+    instruments,
+    home,
+    map,
+  }
 });
