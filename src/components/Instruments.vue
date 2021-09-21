@@ -1,6 +1,8 @@
 <template>
 <div class="instruments" @mousedown="onMouseDown">
-  <Instrument v-for="instrument in allInstruments" :key="instrument.id"/>
+  <Instrument v-for="instrument in allInstruments" :key="instrument.id" 
+  :id="instrument.id" title="instrument.title" @click-child="onChildClick"
+  v-bind:style="{backgroundImage: 'url('+require('@/assets/'+instrument.icon)+')'}"/>
 </div>
 </template>
 
@@ -16,7 +18,10 @@ export default {
   data() {
     return { x1: 10, y1: 10, dx: 0, dy: 0 };
   },
-  computed: mapGetters(['allInstruments']),
+  computed: {
+    ...mapGetters(['allInstruments']),
+    ...mapGetters(['cc']),
+  },
   methods: {
     onMouseDown(e) {
       this.dx = e.clientX - this.x1;
@@ -36,6 +41,11 @@ export default {
       this.$el.style.top = this.y1 + 'px';
       this.$el.style.cursor = 'grabbing';
     },
+    onChildClick(id) {
+      this.cc.setActive(id);
+      //const cc = this.cc();
+      //instruments[id].func(cc, x, y);
+    }
   }
 };
 </script>

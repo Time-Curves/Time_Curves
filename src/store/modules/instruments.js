@@ -1,10 +1,10 @@
 const instruments = {
   state: {
     instruments: [
-      { id: 1, func: 'setDots' },
-      { id: 2, func: 'Write' },
-      { id: 3, func: 'Delete' },
-      { id: 4, func: 'Haha' }],
+      { id: 0, title: 'draw dots', icon: 'dot-icon.png'},
+      { id: 1, title: 'draw lines', icon: 'line-icon.png'},
+      { id: 2, title: 'draw circles', icon: 'circle-icon.png'},
+      { id: 3, title: 'draw smth', icon: 'house-icon.png'}],
   },
   getters: {
     allInstruments: (state) => state.instruments,

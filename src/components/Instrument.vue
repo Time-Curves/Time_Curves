@@ -1,10 +1,16 @@
 <template>
-  <div class="instrument"></div>
+  <div class="instrument" @mousedown="onClick"></div>
 </template>
 
 <script>
 export default {
   name: 'Instrument',
+  props: ['id', 'title'],
+  methods: {
+    onClick() {
+      this.$emit('click-child', this.id);
+    }
+  }
 };
 </script>
 

@@ -13,9 +13,9 @@ export default {
   },
   methods: {
     onMouseDown(e) {
-      this.cc.setDot(e.clientX, e.clientY);
+      this.cc.executeActive(e.clientX, e.clientY);
     },
-    ...mapActions(['setCC']),
+    ...mapActions(['setCC', 'executeFunction']),
   },
   computed: mapGetters(['cc']),
 };

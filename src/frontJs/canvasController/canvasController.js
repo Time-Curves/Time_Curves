@@ -7,7 +7,22 @@ export default class CanvasController {
     this.map = new Image();
     this.map.src = path;
     this.map.onload = () => this.ctx.drawImage(this.map, 0, 0);
+    this.functionInstruments = {
+      0: this.setDot,
+      1: this.drawLine,
+      2: this.drawCircle,
+      3: this.drawSmth,
+    }
+    this.setActive(0);
   }
+
+  executeActive(x, y) {
+    this.active(x, y);
+  }
+
+  setActive(id) {
+    this.active = this.functionInstruments[id];
+  } 
 
   setDot(x, y) {
     this.ctx.beginPath();
@@ -16,4 +31,15 @@ export default class CanvasController {
     this.ctx.stroke();
   }
 
+  drawLine(x, y) {
+    console.log('line');
+  }
+
+  drawCircle(x, y) {
+    console.log('Circle');
+  }
+
+  drawSmth(x, y) {
+    console.log('Smth');
+  }
 }
