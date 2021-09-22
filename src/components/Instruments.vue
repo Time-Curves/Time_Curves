@@ -16,7 +16,7 @@ export default {
     Instrument
   },
   data() {
-    return { x1: 10, y1: 10, dx: 0, dy: 0 };
+    return { x1: 0, y1: 0, dx: 0, dy: 0 };
   },
   computed: {
     ...mapGetters(['allInstruments']),
@@ -47,7 +47,9 @@ export default {
       }
       this.$el.children[id].style['box-shadow'] = '1px 1px blue';
       this.cc.setActive(id);
-    }
+      this.$emit('cursor-change', this.allInstruments[id].cursor);
+    },
+    
   }
 };
 </script>

@@ -2,17 +2,20 @@ export default class CanvasController {
   constructor(path) {
     this.canvas = document.getElementById('map');
     this.ctx = this.canvas.getContext('2d');
-    this.canvas.width = window.innerWidth;
-    this.canvas.height = window.innerHeight;
     this.map = new Image();
     this.map.src = path;
-    this.map.onload = () => this.ctx.drawImage(this.map, 0, 0);
+    this.map.onload = () => {
+      this.canvas.width = this.map.naturalWidth;
+      this.canvas.height = this.map.naturalHeight;
+      this.ctx.drawImage(this.map, 0, 0, this.canvas.width, this.canvas.height);
+    }
     this.functionInstruments = {
       0: this.setDot,
       1: this.drawLine,
-      2: this.drawCircle,
-      3: this.drawSmth,
+      2: this.drug,
+      3: this.zoomIn,
     }
+    this.zoomFactor = 1;
     this.setActive(0);
   }
 
@@ -26,8 +29,8 @@ export default class CanvasController {
 
   setDot(x, y) {
     this.ctx.beginPath();
-    this.ctx.moveTo(x - 10, y - 10);
-    this.ctx.lineTo(x + 1 - 10, y + 1 - 10);
+    this.ctx.moveTo(x, y);
+    this.ctx.lineTo(x + 1, y + 1);
     this.ctx.stroke();
   }
 
@@ -35,11 +38,27 @@ export default class CanvasController {
     console.log('line');
   }
 
-  drawCircle(x, y) {
-    console.log('Circle');
+  drug(x, y) {
+    console.log(x, y);
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    //this.ctx.drawImage(this.map, sx, sy, w/z, h/z, 0, 0, w, h);
   }
 
-  drawSmth(x, y) {
-    console.log('Smth');
+  zoomIn(x, y) {
+    const w = this.canvas.width;
+    const h = this.canvas.height;
+    this.ctx.clearRect(0, 0, w, h);
+    this.zoomFactor *= 2;
+    const z = this.zoomFactor;
+    let sx = x - (w/(z*2));
+    if (sx < 0) sx = 0;
+    console.log(sx, w, w/z);
+    let sy = y - (h/(z*2));
+    if (sy < 0) sy = 0;
+    console.log(sy, h, h/z);
+    this.ctx.drawImage(this.map, sx, sy, w/z, h/z, 0, 0, w, h); //middle 924, 906
+    //this.setDot(sx, sy);
+    //this.setDot(sx + w/z, sy + h/z);
+    console.log('Send help!');
   }
 }

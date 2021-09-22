@@ -1,7 +1,7 @@
 <template>
-<div>
-  <MapComponent/>
-  <Instruments/>
+<div class="container">
+  <MapComponent ref="onCursorChange"/>
+  <Instruments @cursor-change="onCursorChange"/>
 </div>
 </template>
 
@@ -15,22 +15,16 @@ export default {
     MapComponent,
     Instruments,
   },
+  methods: {
+    onCursorChange(cursor) {
+      this.$refs.onCursorChange.onCursorChange(cursor);
+    }
+  }
 };
 </script>
 
 <style>
-#app {
-  position: relative;
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
 html, body {
-  overflow: hidden;
-}
-* {
-  box-sizing: border-box;
+  margin: 0px;
 }
 </style>

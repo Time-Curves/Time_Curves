@@ -1,5 +1,5 @@
 <template>
-  <div id="nav">
+  <div id="nav" class="container">
     <router-view/>
   </div>
 </template>
@@ -19,5 +19,15 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+
+}
+html, body {
+  margin: 0px;
+  height: 100%;
+}
+
+#nav {
+  height: 100%;
+  display: block;
 }
 </style>
