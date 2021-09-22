@@ -1,5 +1,5 @@
 <template>
-<div class="map-component-container container" @change-cursor="onCursorChange">
+<div class="map-component-container" @change-cursor="onCursorChange">
   <canvas id="map" @mousedown="onMouseDown" />
 </div>
 </template>
@@ -30,6 +30,5 @@ export default {
 <style scoped>
 #map {
   cursor: crosshair;
-  float: left;
 }
 </style>

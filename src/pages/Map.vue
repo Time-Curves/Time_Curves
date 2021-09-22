@@ -1,5 +1,5 @@
 <template>
-<div class="container">
+<div class="map-page-container">
   <MapComponent ref="onCursorChange"/>
   <Instruments @cursor-change="onCursorChange"/>
 </div>
@@ -24,7 +24,9 @@ export default {
 </script>
 
 <style>
-html, body {
-  margin: 0px;
+.map-page-container {
+  width: 100%;
+  height: 100%;
 }
+
 </style>
